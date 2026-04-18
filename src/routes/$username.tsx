@@ -160,7 +160,7 @@ function ProfilePage() {
 
           {/* Data loaded */}
           {!loading && data && derived && (
-            <div className="space-y-6 stagger">
+            <div className="space-y-8 stagger">
               <ProfileHeader user={data.user} badge={derived.badge} shareUrl={derived.shareUrl} />
 
               <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
@@ -209,7 +209,7 @@ function ProfilePage() {
                 )}
               </Section>
 
-              <div className="grid gap-6 lg:grid-cols-2">
+              <div className="grid gap-8 lg:grid-cols-2">
                 <Section
                   title="Weekly commit activity"
                   subtitle="Aggregated from public push events"
@@ -229,7 +229,7 @@ function ProfilePage() {
                 </Section>
               </div>
 
-              <div className="grid gap-6 lg:grid-cols-2">
+              <div className="grid gap-8 lg:grid-cols-2">
                 <Section title="Work style" subtitle="Breakdown of recent public events">
                   <EventBreakdown items={derived.events} />
                 </Section>
@@ -238,7 +238,7 @@ function ProfilePage() {
                 </Section>
               </div>
               
-              <div className="grid gap-6 lg:grid-cols-2">
+              <div className="grid gap-8 lg:grid-cols-2">
                 <Section
                   title="Work Schedule"
                   subtitle="When do they code? (Weekday vs Weekend)"

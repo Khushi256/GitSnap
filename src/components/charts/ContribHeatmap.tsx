@@ -23,8 +23,8 @@ export function ContribHeatmap({ days }: { days: Day[] }) {
   const height = 7 * (cell + gap) + gap;
 
   return (
-    <div className="relative">
-      <div className="overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="relative w-full">
+      <div className="w-full overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <svg width={width} height={height} className="block">
           {days.map((d, i) => {
             const week = Math.floor(i / 7);

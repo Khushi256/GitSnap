@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { JSX, useMemo } from "react";
 
 export interface TimelineData {
   topLangs: string[];
@@ -39,8 +39,8 @@ export function LanguageTimeline({ data }: { data: TimelineData }) {
   colorMap.set("Other", COLORS[5]);
 
   return (
-    <div className="flex flex-col space-y-6">
-      <div className="overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="flex flex-col space-y-6 w-full">
+      <div className="w-full overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <svg width={Math.max(width, 300)} height={height} className="block min-w-full">
           {data.timeline.map((item, i) => {
             const x = i * (barWidth + gap) + 12; // Start with 12px padding

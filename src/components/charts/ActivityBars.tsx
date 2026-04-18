@@ -18,7 +18,7 @@ export function ActivityBars({ days }: { days: Day[] }) {
   const height = 120;
 
   return (
-    <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <svg width={weeks.length * (w + gap)} height={height} className="block">
         {weeks.map((v, i) => {
           const h = (v / max) * (height - 8);

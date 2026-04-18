@@ -94,6 +94,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+
   ::selection {
     background-color: oklch(0.72 0.15 245 / 0.3);
   }

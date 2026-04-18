@@ -229,6 +229,7 @@ export function computeWorkSchedule(events: GitHubEvent[]) {
 export function computeOSFootprint(events: GitHubEvent[], username: string, repos: GitHubRepo[]) {
   let personal = 0;
   let external = 0;
+  let totalEvents = 0;
   
   // Set of repo full names that are forks to accurately categorize activity
   const forkNames = new Set(
@@ -248,6 +249,8 @@ export function computeOSFootprint(events: GitHubEvent[], username: string, repo
     
     if (!relevantTypes.includes(e.type)) continue;
     
+    totalEvents++;
+    
     const repoName = e.repo.name.toLowerCase();
     const owner = repoName.split("/")[0];
     
@@ -264,7 +267,7 @@ export function computeOSFootprint(events: GitHubEvent[], username: string, repo
     if (isPersonalRepo) personal += weight;
     else external += weight;
   }
-  return { personal, external };
+  return { personal, external, totalEvents };
 }
 
 

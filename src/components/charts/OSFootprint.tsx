@@ -1,4 +1,4 @@
-export function OSFootprint({ data }: { data: { personal: number; external: number } }) {
+export function OSFootprint({ data }: { data: { personal: number; external: number; totalEvents: number } }) {
   const total = data.personal + data.external;
   if (total === 0) return <p className="text-sm text-muted-foreground flex h-full items-center justify-center">No recent activity detected.</p>;
   
@@ -32,7 +32,7 @@ export function OSFootprint({ data }: { data: { personal: number; external: numb
       </div>
       
       <p className="mt-6 text-xs text-zinc-500 text-center">
-        Analyzed <b>{total}</b> recent contributions across {total === 1 ? 'event' : 'events'} (commits, PRs, issues, etc).
+        Analyzed <b>{total}</b> recent contributions across <b>{data.totalEvents}</b> {data.totalEvents === 1 ? 'event' : 'events'} (commits, PRs, issues, etc).
       </p>
     </div>
   );
