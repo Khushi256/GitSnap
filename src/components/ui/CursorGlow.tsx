@@ -14,10 +14,15 @@ export function CursorGlow() {
         setPosition({ x: e.clientX, y: e.clientY });
         if (!isVisible) setIsVisible(true);
       });
-      
+
       // Optional: Add a subtle expansion when hovering over interactive elements
       const target = e.target as HTMLElement;
-      if (target.tagName.toLowerCase() === 'a' || target.tagName.toLowerCase() === 'button' || target.closest('a') || target.closest('button')) {
+      if (
+        target.tagName.toLowerCase() === "a" ||
+        target.tagName.toLowerCase() === "button" ||
+        target.closest("a") ||
+        target.closest("button")
+      ) {
         setIsHovering(true);
       } else {
         setIsHovering(false);
@@ -50,7 +55,7 @@ export function CursorGlow() {
           background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(99, 102, 241, 0.08), transparent 40%)`,
         }}
       />
-      
+
       {/* Subtle trailing dot */}
       <div
         className={`pointer-events-none fixed top-0 left-0 z-50 flex items-center justify-center rounded-full bg-white/40 backdrop-blur-sm mix-blend-screen transition-all duration-150 ease-out ${

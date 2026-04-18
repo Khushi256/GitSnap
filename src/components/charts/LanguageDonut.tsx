@@ -6,12 +6,12 @@ interface Lang {
 
 const PALETTE = [
   "oklch(0.85 0.15 240)", // Bright Light Blue
-  "oklch(0.7 0.18 220)",  // Bright Cyan-Blue
+  "oklch(0.7 0.18 220)", // Bright Cyan-Blue
   "oklch(0.75 0.15 260)", // Bright Indigo
-  "oklch(0.65 0.2 240)",  // Vibrant Blue
-  "oklch(0.8 0.1 230)",   // Soft Bright Blue
-  "oklch(0.6 0.18 280)",  // Vibrant Violet
-  "oklch(0.9 0.05 240)",  // Very Light Bright Blue
+  "oklch(0.65 0.2 240)", // Vibrant Blue
+  "oklch(0.8 0.1 230)", // Soft Bright Blue
+  "oklch(0.6 0.18 280)", // Vibrant Violet
+  "oklch(0.9 0.05 240)", // Very Light Bright Blue
   "oklch(0.55 0.15 250)", // Deep Bright Indigo
 ];
 

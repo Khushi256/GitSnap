@@ -1,7 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
-// @ts-ignore
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 

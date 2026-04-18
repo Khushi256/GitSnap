@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
-// @ts-ignore
+// @ts-expect-error - three is imported as *
 import * as THREE from "three";
-import { Infinity, Rocket, Shield, Brain, Play, ChevronDown } from "lucide-react";
 
 const AnoAI = () => {
   const containerRef = useRef<HTMLDivElement>(null);

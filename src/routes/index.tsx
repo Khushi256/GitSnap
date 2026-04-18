@@ -52,8 +52,8 @@ function Index() {
               Visual Git Analytics
             </div>
             <h1 className="mt-8 text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight drop-shadow-lg uppercase leading-tight lg:leading-none animate-fade-up animate-delay-100">
-              Your Code As <br className="hidden sm:block" />{" "}
-              A Digital <span className="gradient-blue-grey">Legacy.</span>
+              Your Code As <br className="hidden sm:block" /> A Digital{" "}
+              <span className="gradient-blue-grey">Legacy.</span>
             </h1>
             <p className="mx-auto mt-8 max-w-2xl text-sm sm:text-base text-white/70 leading-relaxed tracking-normal animate-fade-up animate-delay-200">
               Transform raw Git data into a curated gallery. Visualize

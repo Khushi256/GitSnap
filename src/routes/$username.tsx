@@ -59,7 +59,9 @@ function ProfilePage() {
   const [data, setData] = useState<Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [contributions, setContributions] = useState<{ date: string; count: number; level: 0 | 1 | 2 | 3 | 4 }[] | null>(null);
+  const [contributions, setContributions] = useState<
+    { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 }[] | null
+  >(null);
   const [contribLoading, setContribLoading] = useState(true);
 
   useEffect(() => {
@@ -71,14 +73,14 @@ function ProfilePage() {
       setData(null);
       setContribLoading(true);
       setContributions(null);
-      
+
       const contribPromise = fetchContributions(username).catch(() => null);
 
       try {
         const result = await fetchAll(username);
         setData(result);
-        
-        contribPromise.then(contribs => {
+
+        contribPromise.then((contribs) => {
           setContributions(contribs);
           setContribLoading(false);
         });
@@ -122,7 +124,10 @@ function ProfilePage() {
 
       <div className="relative z-1 min-h-screen overflow-auto flex flex-col justify-start pt-20 sm:pt-24">
         {/* Logo in Top-Left Corner (Matches Landing Page) */}
-        <a href="/" className="fixed top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2 hover:opacity-80 transition-opacity animate-fade-in">
+        <a
+          href="/"
+          className="fixed top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2 hover:opacity-80 transition-opacity animate-fade-in"
+        >
           <img src="/gitsnap-logo.png" alt="GitSnap" className="h-7 w-7 sm:h-8 sm:w-8" />
           <span className="text-sm sm:text-base font-bold gradient-text">GitSnap</span>
         </a>
@@ -237,12 +242,9 @@ function ProfilePage() {
                   <TopRepos repos={data.repos} />
                 </Section>
               </div>
-              
+
               <div className="grid gap-8 lg:grid-cols-2">
-                <Section
-                  title="Work Schedule"
-                  subtitle="When do they code? (Weekday vs Weekend)"
-                >
+                <Section title="Work Schedule" subtitle="When do they code? (Weekday vs Weekend)">
                   <WorkSchedule data={derived.workSchedule} />
                 </Section>
                 <Section
@@ -252,8 +254,6 @@ function ProfilePage() {
                   <OSFootprint data={derived.osFootprint} />
                 </Section>
               </div>
-
-
 
               <Section
                 title="Tech Stack Evolution"

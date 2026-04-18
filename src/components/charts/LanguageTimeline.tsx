@@ -11,11 +11,11 @@ export interface TimelineData {
 
 const COLORS = [
   "oklch(0.85 0.15 240)", // Bright Light Blue
-  "oklch(0.7 0.18 220)",  // Bright Cyan-Blue
+  "oklch(0.7 0.18 220)", // Bright Cyan-Blue
   "oklch(0.75 0.15 260)", // Bright Indigo
-  "oklch(0.65 0.2 240)",  // Vibrant Blue
-  "oklch(0.8 0.1 230)",   // Soft Bright Blue
-  "oklch(0.4 0.05 250)",   // Other (Darker neutral)
+  "oklch(0.65 0.2 240)", // Vibrant Blue
+  "oklch(0.8 0.1 230)", // Soft Bright Blue
+  "oklch(0.4 0.05 250)", // Other (Darker neutral)
 ];
 
 export function LanguageTimeline({ data }: { data: TimelineData }) {
@@ -47,9 +47,9 @@ export function LanguageTimeline({ data }: { data: TimelineData }) {
             let currentY = height - 24; // Leave 24px for year label at bottom
 
             const categories = [...data.topLangs, "Other"];
-            let elements: JSX.Element[] = [];
-            
-            categories.forEach(lang => {
+            const elements: JSX.Element[] = [];
+
+            categories.forEach((lang) => {
               const count = item.languages[lang];
               if (count && count > 0) {
                 // scale height relative to maxTotal
@@ -66,8 +66,8 @@ export function LanguageTimeline({ data }: { data: TimelineData }) {
                     rx={2}
                     className="hover:opacity-80 transition-opacity cursor-pointer"
                   >
-                    <title>{`${item.year} - ${lang}: ${count} repo${count === 1 ? '' : 's'}`}</title>
-                  </rect>
+                    <title>{`${item.year} - ${lang}: ${count} repo${count === 1 ? "" : "s"}`}</title>
+                  </rect>,
                 );
               }
             });

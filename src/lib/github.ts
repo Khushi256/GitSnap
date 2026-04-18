@@ -70,10 +70,12 @@ export const fetchEvents = (username: string) =>
 export async function fetchContributions(username: string, retries = 2) {
   for (let i = 0; i <= retries; i++) {
     try {
-      const res = await fetch(`https://github-contributions-api.deno.dev/${encodeURIComponent(username)}.json`);
+      const res = await fetch(
+        `https://github-contributions-api.deno.dev/${encodeURIComponent(username)}.json`,
+      );
       if (!res.ok) throw new Error(`Status ${res.status}`);
       const data = await res.json();
-      
+
       // Adapt Deno API response to our days format
       const days: { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 }[] = [];
       const levels: Record<string, 0 | 1 | 2 | 3 | 4> = {
@@ -83,7 +85,7 @@ export async function fetchContributions(username: string, retries = 2) {
         THIRD_QUARTILE: 3,
         FOURTH_QUARTILE: 4,
       };
-      
+
       for (const week of data.contributions) {
         for (const day of week) {
           days.push({
@@ -97,7 +99,7 @@ export async function fetchContributions(username: string, retries = 2) {
     } catch (err) {
       if (i === retries) throw err;
       // Exponential backoff
-      await new Promise(r => setTimeout(r, 500 * Math.pow(2, i)));
+      await new Promise((r) => setTimeout(r, 500 * Math.pow(2, i)));
     }
   }
   return null;
@@ -212,8 +214,6 @@ export function isRealProject(repo: GitHubRepo) {
   return !/(tutorial|clone|bootcamp|assignment|practice|todo|course)/i.test(str);
 }
 
-
-
 export function computeWorkSchedule(events: GitHubEvent[]) {
   let weekday = 0;
   let weekend = 0;
@@ -230,63 +230,88 @@ export function computeOSFootprint(events: GitHubEvent[], username: string, repo
   let personal = 0;
   let external = 0;
   let totalEvents = 0;
-  
+
   // Set of repo full names that are forks to accurately categorize activity
-  const forkNames = new Set(
-    repos.filter(r => r.fork).map(r => r.full_name.toLowerCase())
-  );
+  const forkNames = new Set(repos.filter((r) => r.fork).map((r) => r.full_name.toLowerCase()));
 
   for (const e of events) {
     // Include a broader range of contribution events
     const relevantTypes = [
-      "PushEvent", 
-      "PullRequestEvent", 
-      "IssuesEvent", 
-      "IssueCommentEvent", 
+      "PushEvent",
+      "PullRequestEvent",
+      "IssuesEvent",
+      "IssueCommentEvent",
       "ForkEvent",
-      "PullRequestReviewEvent"
+      "PullRequestReviewEvent",
     ];
-    
+
     if (!relevantTypes.includes(e.type)) continue;
-    
+
     totalEvents++;
-    
+
     const repoName = e.repo.name.toLowerCase();
     const owner = repoName.split("/")[0];
-    
+
     // It's personal ONLY if the user owns it AND it's not a fork
     // Contributions to forks are better categorized as Open Source/External
     const isPersonalRepo = owner === username.toLowerCase() && !forkNames.has(repoName);
-    
+
     let weight = 1;
     if (e.type === "PushEvent") {
       // Weight push events by the number of commits
       weight = (e.payload as { commits?: unknown[] }).commits?.length ?? 1;
     }
-    
+
     if (isPersonalRepo) personal += weight;
     else external += weight;
   }
   return { personal, external, totalEvents };
 }
 
-
 export function aggregateTopics(repos: GitHubRepo[]) {
   const map = new Map<string, number>();
-  
+
   // High-value keywords to extract from descriptions if explicit topics aren't used
   const keywords = [
-    "react", "vue", "angular", "svelte", "nextjs", "nuxtjs", 
-    "node", "express", "django", "flask", "fastapi", "spring", 
-    "docker", "kubernetes", "aws", "gcp", "azure", "firebase", 
-    "supabase", "mongodb", "postgresql", "mysql", "redis", 
-    "graphql", "trpc", "tailwind", "prisma", "tensorflow", "pytorch",
-    "rust", "golang", "swift", "kotlin", "typescript"
+    "react",
+    "vue",
+    "angular",
+    "svelte",
+    "nextjs",
+    "nuxtjs",
+    "node",
+    "express",
+    "django",
+    "flask",
+    "fastapi",
+    "spring",
+    "docker",
+    "kubernetes",
+    "aws",
+    "gcp",
+    "azure",
+    "firebase",
+    "supabase",
+    "mongodb",
+    "postgresql",
+    "mysql",
+    "redis",
+    "graphql",
+    "trpc",
+    "tailwind",
+    "prisma",
+    "tensorflow",
+    "pytorch",
+    "rust",
+    "golang",
+    "swift",
+    "kotlin",
+    "typescript",
   ];
 
   for (const r of repos) {
     if (r.fork || !isRealProject(r)) continue;
-    
+
     if (r.topics) {
       for (const t of r.topics) {
         map.set(t, (map.get(t) ?? 0) + 1);
@@ -296,14 +321,14 @@ export function aggregateTopics(repos: GitHubRepo[]) {
     if (r.description) {
       const desc = r.description.toLowerCase();
       for (const kw of keywords) {
-        const regex = new RegExp(`\\b${kw.replace('js', '(\\.js|js)?')}\\b`);
+        const regex = new RegExp(`\\b${kw.replace("js", "(\\.js|js)?")}\\b`);
         if (regex.test(desc)) {
           map.set(kw, (map.get(kw) ?? 0) + 1);
         }
       }
     }
   }
-  
+
   return [...map.entries()]
     .map(([topic, count]) => ({ topic, count }))
     .sort((a, b) => b.count - a.count)
@@ -318,27 +343,27 @@ export function computeLanguageTimeline(repos: GitHubRepo[]) {
     if (r.fork || !isRealProject(r)) continue;
     const year = new Date(r.created_at).getFullYear();
     const lang = r.language || "Unknown";
-    
+
     if (!years.has(year)) years.set(year, {});
     const yearData = years.get(year)!;
     yearData[lang] = (yearData[lang] ?? 0) + 1;
     allLangs.set(lang, (allLangs.get(lang) ?? 0) + 1);
   }
-  
+
   const topLangs = [...allLangs.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
-    .map(x => x[0]);
-    
+    .map((x) => x[0]);
+
   return {
     topLangs,
     timeline: [...years.entries()]
       .sort((a, b) => a[0] - b[0])
       .map(([year, langs]) => {
         const consolidated: { [lang: string]: number } = {};
-        topLangs.forEach(l => consolidated[l] = 0);
+        topLangs.forEach((l) => (consolidated[l] = 0));
         consolidated["Other"] = 0;
-        
+
         let total = 0;
         for (const [l, count] of Object.entries(langs)) {
           if (topLangs.includes(l)) consolidated[l] += count;
@@ -346,6 +371,6 @@ export function computeLanguageTimeline(repos: GitHubRepo[]) {
           total += count;
         }
         return { year, languages: consolidated, total };
-      })
+      }),
   };
 }

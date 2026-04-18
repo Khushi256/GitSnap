@@ -6,16 +6,19 @@ export function TopRepos({ repos }: { repos: GitHubRepo[] }) {
   const [realOnly, setRealOnly] = useState(false);
 
   const filtered = repos.filter((r) => !r.fork && (!realOnly || isRealProject(r)));
-  
-  const top = [...filtered]
-    .sort((a, b) => b.stargazers_count - a.stargazers_count)
-    .slice(0, 6);
+
+  const top = [...filtered].sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 6);
 
   if (top.length === 0 && repos.length > 0) {
     return (
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">No matching repos found.</p>
-        <button onClick={() => setRealOnly(false)} className="text-xs text-indigo-400 hover:text-indigo-300">Show all</button>
+        <button
+          onClick={() => setRealOnly(false)}
+          className="text-xs text-indigo-400 hover:text-indigo-300"
+        >
+          Show all
+        </button>
       </div>
     );
   }
@@ -29,9 +32,9 @@ export function TopRepos({ repos }: { repos: GitHubRepo[] }) {
     <div className="space-y-3">
       <div className="flex justify-end">
         <label className="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer hover:text-white transition-colors">
-          <input 
-            type="checkbox" 
-            checked={realOnly} 
+          <input
+            type="checkbox"
+            checked={realOnly}
             onChange={(e) => setRealOnly(e.target.checked)}
             className="rounded border-white/20 bg-black/20 text-indigo-500 focus:ring-indigo-500/30"
           />
@@ -45,8 +48,18 @@ export function TopRepos({ repos }: { repos: GitHubRepo[] }) {
           const lastActiveDays = Math.floor((now - pushed) / MS_PER_DAY);
           const lifespanDays = Math.floor((pushed - created) / MS_PER_DAY);
 
-          const lastActiveStr = lastActiveDays === 0 ? "Today" : lastActiveDays < 30 ? `${lastActiveDays}d ago` : `${Math.floor(lastActiveDays / 30)}mo ago`;
-          const lifespanStr = lifespanDays > 365 ? `${(lifespanDays / 365).toFixed(1)}y` : lifespanDays > 30 ? `${Math.floor(lifespanDays / 30)}mo` : `${lifespanDays}d`;
+          const lastActiveStr =
+            lastActiveDays === 0
+              ? "Today"
+              : lastActiveDays < 30
+                ? `${lastActiveDays}d ago`
+                : `${Math.floor(lastActiveDays / 30)}mo ago`;
+          const lifespanStr =
+            lifespanDays > 365
+              ? `${(lifespanDays / 365).toFixed(1)}y`
+              : lifespanDays > 30
+                ? `${Math.floor(lifespanDays / 30)}mo`
+                : `${lifespanDays}d`;
 
           return (
             <a
@@ -56,7 +69,6 @@ export function TopRepos({ repos }: { repos: GitHubRepo[] }) {
               rel="noreferrer"
               className="group flex flex-col justify-between rounded-lg border border-white/20 bg-black backdrop-blur-sm p-4 transition-all hover:border-white/30 hover:bg-white/5"
             >
-
               <div>
                 <div className="flex items-center justify-between gap-2">
                   <span className="truncate font-display text-sm font-medium text-white group-hover:text-zinc-200">
@@ -79,10 +91,16 @@ export function TopRepos({ repos }: { repos: GitHubRepo[] }) {
                   {r.forks_count > 0 && <span>⑂ {r.forks_count}</span>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="rounded border border-white/5 bg-white/5 px-1.5 py-0.5" title="Active duration">
+                  <span
+                    className="rounded border border-white/5 bg-white/5 px-1.5 py-0.5"
+                    title="Active duration"
+                  >
                     {lifespanStr}
                   </span>
-                  <span className="rounded border border-white/5 bg-white/5 px-1.5 py-0.5" title="Last updated">
+                  <span
+                    className="rounded border border-white/5 bg-white/5 px-1.5 py-0.5"
+                    title="Last updated"
+                  >
                     {lastActiveStr}
                   </span>
                 </div>
