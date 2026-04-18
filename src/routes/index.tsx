@@ -49,9 +49,9 @@ function Index() {
           <header className="text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs tracking-wide text-zinc-300 backdrop-blur animate-fade-in-scale">
               <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              Open Source Artifacts
+              Visual Git Analytics
             </div>
-            <h1 className="mt-8 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight drop-shadow-lg uppercase leading-tight lg:leading-none animate-fade-up animate-delay-100">
+            <h1 className="mt-8 text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight drop-shadow-lg uppercase leading-tight lg:leading-none animate-fade-up animate-delay-100">
               Your Code As <br className="hidden sm:block" />{" "}
               A Digital <span className="gradient-blue-grey">Legacy.</span>
             </h1>
