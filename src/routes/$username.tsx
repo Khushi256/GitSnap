@@ -262,9 +262,8 @@ function ProfilePage() {
                 <LanguageTimeline data={derived.timeline} />
               </Section>
 
-              <footer className="pt-4 text-center text-xs text-muted-foreground">
-                Data from the public GitHub API · No authentication used · Rate limit: 60 req/hour
-                per IP
+              <footer className="pt-8 pb-4 text-center text-[10px] uppercase tracking-[0.2em] text-white/20 font-medium">
+                Powered by the GitHub API
               </footer>
             </div>
           )}
