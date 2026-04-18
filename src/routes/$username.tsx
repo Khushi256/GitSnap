@@ -110,7 +110,7 @@ function ProfilePage() {
       badge: profileScore(data.user, data.repos),
       shareUrl: `${window.location.origin}/${data.user.login}`,
       workSchedule: computeWorkSchedule(data.events),
-      osFootprint: computeOSFootprint(data.events, data.user.login),
+      osFootprint: computeOSFootprint(data.events, data.user.login, data.repos),
       topics: aggregateTopics(data.repos),
       timeline: computeLanguageTimeline(data.repos),
     };
@@ -118,9 +118,8 @@ function ProfilePage() {
 
   return (
     <>
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        <AnoAI />
-      </div>
+      <div className="fixed inset-0 z-0 bg-black" />
+
       <div className="relative z-1 min-h-screen overflow-auto flex flex-col justify-start pt-20 sm:pt-24">
         {/* Logo in Top-Left Corner (Matches Landing Page) */}
         <a href="/" className="fixed top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2 hover:opacity-80 transition-opacity animate-fade-in">

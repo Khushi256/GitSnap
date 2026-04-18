@@ -17,7 +17,7 @@ export function ProfileHeader({ user, badge, shareUrl }: Props) {
   };
 
   return (
-    <div className="rounded-2xl border border-indigo-500/30 bg-black/40 backdrop-blur-sm p-6 sm:p-8 hover:border-indigo-500/50 transition-colors">
+    <div className="rounded-2xl border border-indigo-500/50 bg-black/40 backdrop-blur-sm p-6 sm:p-8 hover:border-indigo-500/70 transition-colors">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
         <img
           src={user.avatar_url}

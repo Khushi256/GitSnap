@@ -54,8 +54,9 @@ export function TopRepos({ repos }: { repos: GitHubRepo[] }) {
               href={r.html_url}
               target="_blank"
               rel="noreferrer"
-              className="group flex flex-col justify-between rounded-lg border border-white/10 bg-black backdrop-blur-sm p-4 transition-all hover:border-white/20 hover:bg-white/5"
+              className="group flex flex-col justify-between rounded-lg border border-white/20 bg-black backdrop-blur-sm p-4 transition-all hover:border-white/30 hover:bg-white/5"
             >
+
               <div>
                 <div className="flex items-center justify-between gap-2">
                   <span className="truncate font-display text-sm font-medium text-white group-hover:text-zinc-200">

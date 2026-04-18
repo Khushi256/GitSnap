@@ -226,17 +226,47 @@ export function computeWorkSchedule(events: GitHubEvent[]) {
   return { weekday, weekend };
 }
 
-export function computeOSFootprint(events: GitHubEvent[], username: string) {
+export function computeOSFootprint(events: GitHubEvent[], username: string, repos: GitHubRepo[]) {
   let personal = 0;
   let external = 0;
+  
+  // Set of repo full names that are forks to accurately categorize activity
+  const forkNames = new Set(
+    repos.filter(r => r.fork).map(r => r.full_name.toLowerCase())
+  );
+
   for (const e of events) {
-    if (e.type !== "PushEvent" && e.type !== "PullRequestEvent") continue;
-    const owner = e.repo.name.split("/")[0];
-    if (owner.toLowerCase() === username.toLowerCase()) personal++;
-    else external++;
+    // Include a broader range of contribution events
+    const relevantTypes = [
+      "PushEvent", 
+      "PullRequestEvent", 
+      "IssuesEvent", 
+      "IssueCommentEvent", 
+      "ForkEvent",
+      "PullRequestReviewEvent"
+    ];
+    
+    if (!relevantTypes.includes(e.type)) continue;
+    
+    const repoName = e.repo.name.toLowerCase();
+    const owner = repoName.split("/")[0];
+    
+    // It's personal ONLY if the user owns it AND it's not a fork
+    // Contributions to forks are better categorized as Open Source/External
+    const isPersonalRepo = owner === username.toLowerCase() && !forkNames.has(repoName);
+    
+    let weight = 1;
+    if (e.type === "PushEvent") {
+      // Weight push events by the number of commits
+      weight = (e.payload as { commits?: unknown[] }).commits?.length ?? 1;
+    }
+    
+    if (isPersonalRepo) personal += weight;
+    else external += weight;
   }
   return { personal, external };
 }
+
 
 export function aggregateTopics(repos: GitHubRepo[]) {
   const map = new Map<string, number>();

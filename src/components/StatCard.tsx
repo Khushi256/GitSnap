@@ -10,7 +10,7 @@ interface Props {
 
 export function StatCard({ label, value, icon, accent = "text-primary" }: Props) {
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-5 transition-all hover:border-white/20 hover:bg-white/5">
+    <div className="group relative overflow-hidden rounded-xl border border-white/20 bg-black/40 backdrop-blur-sm p-5 transition-all hover:border-white/30 hover:bg-white/5">
       <div className="flex items-center justify-between">
         <span className="text-xs uppercase tracking-wider text-zinc-400">{label}</span>
         <span className={accent}>{icon}</span>
