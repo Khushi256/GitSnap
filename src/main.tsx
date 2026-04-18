@@ -6,6 +6,8 @@ import "./styles.css";
 
 const router = getRouter();
 
+console.log("GitSnap SPA initialized successfully!");
+
 // Render the app
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
