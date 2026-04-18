@@ -23,8 +23,8 @@ The application is built using a modern, type-safe stack designed for speed and 
 - **Framework**: Vite + React 19 (SPA)
 - **Styling**: Tailwind CSS 4 with custom animations
 - **Graphics**: Three.js & Custom GLSL Shaders
-- **Routing**: TanStack Router (File-based routing)
-- **Data Fetching**: TanStack Query
+- **Routing**: Client-side file-based routing
+- **Data Fetching**: Native Fetch API with custom hooks
 - **Visualization**: Recharts and custom SVG implementations
 - **Icons**: Lucide React
 - **Validation**: Zod
