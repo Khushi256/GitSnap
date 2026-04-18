@@ -120,13 +120,13 @@ function ProfilePage() {
 
   return (
     <>
-      <div className="fixed inset-0 z-0 bg-black" />
+      <div className="absolute inset-0 z-0 bg-black" />
 
-      <div className="relative z-1 min-h-screen overflow-auto flex flex-col justify-start pt-20 sm:pt-24">
+      <div className="relative z-1 min-h-screen overflow-x-hidden flex flex-col justify-start pt-20 sm:pt-24 pb-8 sm:pb-16">
         {/* Logo in Top-Left Corner (Matches Landing Page) */}
         <a
           href="/"
-          className="fixed top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2 hover:opacity-80 transition-opacity animate-fade-in"
+          className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2 hover:opacity-80 transition-opacity animate-fade-in"
         >
           <img src="/gitsnap-logo.png" alt="GitSnap" className="h-7 w-7 sm:h-8 sm:w-8" />
           <span className="text-sm sm:text-base font-bold gradient-text">GitSnap</span>

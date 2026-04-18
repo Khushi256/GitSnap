@@ -37,9 +37,9 @@ function Index() {
       <div className="fixed inset-0 z-0 overflow-hidden">
         <AnoAI />
       </div>
-      <div className="relative z-1 min-h-screen overflow-auto flex flex-col justify-center py-16">
+      <div className="relative z-1 min-h-screen overflow-x-hidden flex flex-col justify-center py-8 sm:py-16">
         {/* Logo in Top-Left Corner */}
-        <div className="fixed top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2 animate-fade-up">
+        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2 animate-fade-up">
           <img src="/gitsnap-logo.png" alt="GitSnap" className="h-7 w-7 sm:h-8 sm:w-8" />
           <span className="text-sm sm:text-base font-bold gradient-text">GitSnap</span>
         </div>
@@ -65,7 +65,7 @@ function Index() {
             </div>
           </header>
 
-          <div className="mx-auto mt-32 max-w-md text-center text-xs sm:text-sm text-white/50 animate-fade-in animate-delay-400">
+          <div className="mx-auto mt-16 sm:mt-32 max-w-md text-center text-xs sm:text-sm text-white/50 animate-fade-in animate-delay-400">
             Enter a username above to begin exploring.
           </div>
         </div>

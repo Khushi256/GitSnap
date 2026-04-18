@@ -10,12 +10,12 @@ export interface TimelineData {
 }
 
 const COLORS = [
-  "oklch(0.85 0.15 240)", // Bright Light Blue
-  "oklch(0.7 0.18 220)", // Bright Cyan-Blue
-  "oklch(0.75 0.15 260)", // Bright Indigo
+  "oklch(0.75 0.15 285)", // Soft Violet
   "oklch(0.65 0.2 240)", // Vibrant Blue
-  "oklch(0.8 0.1 230)", // Soft Bright Blue
-  "oklch(0.4 0.05 250)", // Other (Darker neutral)
+  "oklch(0.95 0.01 240)", // Pure White-ish
+  "oklch(0.45 0.18 240)", // Deep Blue
+  "oklch(0.55 0.2 290)", // Darker Violet
+  "oklch(0.65 0.02 240)", // Medium Grey
 ];
 
 export function LanguageTimeline({ data }: { data: TimelineData }) {
