@@ -2,8 +2,7 @@ import type { GitHubRepo } from "@/lib/github";
 
 export function RepoTimeline({ repos }: { repos: GitHubRepo[] }) {
   const data = repos.filter((r) => !r.fork);
-  if (data.length === 0)
-    return <p className="text-sm text-muted-foreground">No repos yet.</p>;
+  if (data.length === 0) return <p className="text-sm text-muted-foreground">No repos yet.</p>;
 
   // group by year-month
   const buckets = new Map<string, number>();

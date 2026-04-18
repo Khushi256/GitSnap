@@ -4,8 +4,7 @@ import { useState } from "react";
 export function RepoScatter({ repos }: { repos: GitHubRepo[] }) {
   const [hover, setHover] = useState<GitHubRepo | null>(null);
   const data = repos.filter((r) => !r.fork && r.size > 0);
-  if (data.length === 0)
-    return <p className="text-sm text-muted-foreground">Not enough data.</p>;
+  if (data.length === 0) return <p className="text-sm text-muted-foreground">Not enough data.</p>;
 
   const w = 600;
   const h = 260;
@@ -15,8 +14,7 @@ export function RepoScatter({ repos }: { repos: GitHubRepo[] }) {
   const maxStars = Math.max(...data.map((r) => r.stargazers_count), 1);
 
   // log scale for size
-  const xScale = (s: number) =>
-    pad + (Math.log10(s + 1) / Math.log10(maxSize + 1)) * (w - pad * 2);
+  const xScale = (s: number) => pad + (Math.log10(s + 1) / Math.log10(maxSize + 1)) * (w - pad * 2);
   const yScale = (s: number) =>
     h - pad - (Math.log10(s + 1) / Math.log10(maxStars + 1)) * (h - pad * 2);
 
@@ -26,7 +24,13 @@ export function RepoScatter({ repos }: { repos: GitHubRepo[] }) {
         {/* axes */}
         <line x1={pad} y1={h - pad} x2={w - pad} y2={h - pad} stroke="var(--color-border)" />
         <line x1={pad} y1={pad} x2={pad} y2={h - pad} stroke="var(--color-border)" />
-        <text x={w - pad} y={h - 10} textAnchor="end" fontSize="10" fill="var(--color-muted-foreground)">
+        <text
+          x={w - pad}
+          y={h - 10}
+          textAnchor="end"
+          fontSize="10"
+          fill="var(--color-muted-foreground)"
+        >
           repo size (KB, log) →
         </text>
         <text

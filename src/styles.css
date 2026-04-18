@@ -1,6 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap");
 @import "tailwindcss" source(none);
-@source "../src";
 @import "tw-animate-css";
+@source "../src";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -35,29 +36,30 @@
   --color-contrib-2: var(--contrib-2);
   --color-contrib-3: var(--contrib-3);
   --color-contrib-4: var(--contrib-4);
-  --font-display: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+  --font-display:
+    "Outfit", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
 }
 
 :root {
   --radius: 0.5rem;
 
   /* Pure black, neutral grays, single muted accent. No gradients. */
-  --background: oklch(0 0 0);                   /* pure black */
+  --background: oklch(0 0 0); /* pure black */
   --foreground: oklch(0.96 0 0);
-  --card: oklch(0.16 0 0);                      /* near-black elevated */
+  --card: oklch(0.16 0 0); /* near-black elevated */
   --card-foreground: oklch(0.96 0 0);
   --popover: oklch(0.18 0 0);
   --popover-foreground: oklch(0.96 0 0);
 
-  --primary: oklch(0.96 0 0);                   /* white as primary */
+  --primary: oklch(0.96 0 0); /* white as primary */
   --primary-foreground: oklch(0 0 0);
   --secondary: oklch(0.2 0 0);
   --secondary-foreground: oklch(0.96 0 0);
   --muted: oklch(0.18 0 0);
   --muted-foreground: oklch(0.62 0 0);
-  --accent: oklch(0.72 0.04 240);               /* one cool muted blue accent */
-  --accent-foreground: oklch(0 0 0);
+  --accent: oklch(0.55 0.08 240); /* muted blue accent */
+  --accent-foreground: oklch(0.96 0 0);
   --destructive: oklch(0.62 0.18 25);
   --destructive-foreground: oklch(0.98 0 0);
   --success: oklch(0.7 0.08 150);
@@ -67,12 +69,12 @@
   --input: oklch(0.2 0 0);
   --ring: oklch(0.5 0 0);
 
-  /* Contribution heatmap — neutral grayscale steps */
-  --contrib-0: oklch(0.16 0 0);
-  --contrib-1: oklch(0.3 0 0);
-  --contrib-2: oklch(0.45 0 0);
-  --contrib-3: oklch(0.65 0 0);
-  --contrib-4: oklch(0.92 0 0);
+  /* Contribution heatmap — grey for empty, blue tones for contributions */
+  --contrib-0: oklch(0.28 0 0);
+  --contrib-1: oklch(0.4 0.1 240);
+  --contrib-2: oklch(0.5 0.15 240);
+  --contrib-3: oklch(0.6 0.18 240);
+  --contrib-4: oklch(0.7 0.2 240);
 
   --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 4px 24px -8px oklch(0 0 0 / 0.6);
 
@@ -84,7 +86,8 @@
     border-color: var(--color-border);
   }
 
-  html, body {
+  html,
+  body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
@@ -98,42 +101,108 @@
 
 @layer utilities {
   .shadow-card {
-    box-shadow: var(--shadow-card);
+    @apply shadow-[0_1px_0_0_oklch(1_0_0/0.04)_inset,0_4px_24px_-8px_oklch(0_0_0/0.6)];
   }
+
+  .gradient-text {
+    @apply bg-linear-to-r from-blue-400 via-blue-300 to-slate-400 bg-clip-text text-transparent;
+  }
+
+  .gradient-button {
+    @apply bg-linear-to-r from-blue-500 to-slate-500 text-white hover:from-blue-400 hover:to-slate-400;
+  }
+
   .font-display {
     font-family: var(--font-display);
   }
 
   @keyframes fade-up {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes fade-in-scale {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
   @keyframes draw-circle {
-    from { stroke-dashoffset: var(--circ); }
-    to { stroke-dashoffset: var(--target); }
+    from {
+      stroke-dashoffset: var(--circ);
+    }
+    to {
+      stroke-dashoffset: var(--target);
+    }
   }
   @keyframes grow-bar {
-    from { transform: scaleY(0); }
-    to { transform: scaleY(1); }
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
   }
   .animate-fade-up {
-    animation: fade-up 0.6s var(--transition-smooth) both;
+    animation: fade-up 0.9s var(--transition-smooth) both;
   }
   .animate-fade-in {
-    animation: fade-in 0.6s ease both;
+    animation: fade-in 0.9s ease both;
+  }
+  .animate-fade-in-scale {
+    animation: fade-in-scale 0.9s var(--transition-smooth) both;
+  }
+  .animate-delay-100 {
+    animation-delay: 0.15s;
+  }
+  .animate-delay-200 {
+    animation-delay: 0.3s;
+  }
+  .animate-delay-300 {
+    animation-delay: 0.45s;
+  }
+  .animate-delay-400 {
+    animation-delay: 0.6s;
   }
   .stagger > * {
     animation: fade-up 0.6s var(--transition-smooth) both;
   }
-  .stagger > *:nth-child(1) { animation-delay: 0.05s; }
-  .stagger > *:nth-child(2) { animation-delay: 0.12s; }
-  .stagger > *:nth-child(3) { animation-delay: 0.19s; }
-  .stagger > *:nth-child(4) { animation-delay: 0.26s; }
-  .stagger > *:nth-child(5) { animation-delay: 0.33s; }
-  .stagger > *:nth-child(6) { animation-delay: 0.4s; }
-  .stagger > *:nth-child(7) { animation-delay: 0.47s; }
+  .stagger > *:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .stagger > *:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+  .stagger > *:nth-child(3) {
+    animation-delay: 0.19s;
+  }
+  .stagger > *:nth-child(4) {
+    animation-delay: 0.26s;
+  }
+  .stagger > *:nth-child(5) {
+    animation-delay: 0.33s;
+  }
+  .stagger > *:nth-child(6) {
+    animation-delay: 0.4s;
+  }
+  .stagger > *:nth-child(7) {
+    animation-delay: 0.47s;
+  }
 }

@@ -72,9 +72,7 @@ export function LanguageDonut({ data }: { data: Lang[] }) {
               />
               <span className="text-foreground">{l.name}</span>
             </span>
-            <span className="font-display text-muted-foreground">
-              {(l.pct * 100).toFixed(1)}%
-            </span>
+            <span className="font-display text-muted-foreground">{(l.pct * 100).toFixed(1)}%</span>
           </li>
         ))}
       </ul>
