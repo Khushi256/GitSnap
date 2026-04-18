@@ -3,12 +3,11 @@ import { useState } from "react";
 
 interface Props {
   user: GitHubUser;
-  badge: { label: string; color: string };
+  badge: { label: string; color: string } | null;
   shareUrl: string;
-  summary?: string;
 }
 
-export function ProfileHeader({ user, badge, shareUrl, summary }: Props) {
+export function ProfileHeader({ user, badge, shareUrl }: Props) {
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
@@ -30,9 +29,11 @@ export function ProfileHeader({ user, badge, shareUrl, summary }: Props) {
             <h1 className="font-display text-3xl font-semibold gradient-text">
               {user.name ?? user.login}
             </h1>
-            <span className="inline-flex items-center rounded-full border border-indigo-500/40 bg-indigo-500/20 px-3 py-1 text-xs font-medium text-indigo-200">
-              ★ {badge.label}
-            </span>
+            {badge && (
+              <span className="inline-flex items-center rounded-full border border-indigo-500/40 bg-indigo-500/20 px-3 py-1 text-xs font-medium text-indigo-200">
+                ★ {badge.label}
+              </span>
+            )}
           </div>
           <a
             href={user.html_url}
@@ -43,12 +44,6 @@ export function ProfileHeader({ user, badge, shareUrl, summary }: Props) {
             @{user.login}
           </a>
           {user.bio && <p className="text-sm text-white/80">{user.bio}</p>}
-          {summary && (
-            <div className="my-2 rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-sm text-indigo-100 shadow-inner">
-              <strong className="block text-[10px] uppercase tracking-wider text-indigo-300 mb-1 opacity-80">Quick Summary</strong>
-              {summary}
-            </div>
-          )}
           <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-zinc-400 mt-2">
             {user.location && <span>📍 {user.location}</span>}
             {user.company && <span>🏢 {user.company}</span>}

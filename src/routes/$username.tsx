@@ -10,7 +10,6 @@ import {
   eventBreakdown,
   currentStreak,
   profileScore,
-  generateSummary,
   computeWorkSchedule,
   computeOSFootprint,
   aggregateTopics,
@@ -110,7 +109,6 @@ function ProfilePage() {
       events: eventBreakdown(data.events),
       badge: profileScore(data.user, data.repos),
       shareUrl: `${window.location.origin}/${data.user.login}`,
-      summary: generateSummary(data.user, data.repos, langs, contributions),
       workSchedule: computeWorkSchedule(data.events),
       osFootprint: computeOSFootprint(data.events, data.user.login),
       topics: aggregateTopics(data.repos),
@@ -164,7 +162,7 @@ function ProfilePage() {
           {/* Data loaded */}
           {!loading && data && derived && (
             <div className="space-y-6 stagger">
-              <ProfileHeader user={data.user} badge={derived.badge} shareUrl={derived.shareUrl} summary={derived.summary} />
+              <ProfileHeader user={data.user} badge={derived.badge} shareUrl={derived.shareUrl} />
 
               <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
                 <StatCard

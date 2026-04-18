@@ -203,7 +203,7 @@ export function profileScore(user: GitHubUser, repos: GitHubRepo[]) {
   if (score > 1500) return { label: "Power Contributor", color: "from-fuchsia-400 to-purple-500" };
   if (score > 400) return { label: "Rising Contributor", color: "from-blue-400 to-cyan-400" };
   if (score > 80) return { label: "Active Builder", color: "from-emerald-400 to-teal-400" };
-  return { label: "Newcomer", color: "from-slate-400 to-slate-500" };
+  return null;
 }
 
 export function isRealProject(repo: GitHubRepo) {
@@ -212,30 +212,7 @@ export function isRealProject(repo: GitHubRepo) {
   return !/(tutorial|clone|bootcamp|assignment|practice|todo|course)/i.test(str);
 }
 
-export function generateSummary(
-  user: GitHubUser,
-  repos: GitHubRepo[],
-  langs: { name: string; count: number; pct: number }[],
-  days: { date: string; count: number }[] | null
-) {
-  const topLang = langs.length > 0 ? langs[0].name : "polyglot";
-  const realProjects = repos.filter(isRealProject);
-  const activeCount = realProjects.filter((r) => r.stargazers_count > 0 || r.forks_count > 0).length;
-  
-  let recentActivity = "with unknown recent activity";
-  if (days) {
-    const recentCommits = days.slice(-30).reduce((s, d) => s + d.count, 0);
-    if (recentCommits > 20) recentActivity = "highly active recently";
-    else if (recentCommits > 0) recentActivity = "active recently";
-    else recentActivity = "inactive recently";
-  }
 
-  const traction = activeCount > 0 
-    ? `with ${activeCount} original project${activeCount === 1 ? "" : "s"} showing some traction`
-    : `focusing on personal projects`;
-
-  return `Primarily a ${topLang} developer, ${recentActivity}, ${traction}.`;
-}
 
 export function computeWorkSchedule(events: GitHubEvent[]) {
   let weekday = 0;
