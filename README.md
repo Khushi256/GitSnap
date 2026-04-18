@@ -1,6 +1,6 @@
 # GitSnap
 
-GitSnap is a high-performance GitHub profile visualization dashboard designed to transform raw developer activity data into meaningful, data-driven narratives. By leveraging custom SVG charts and real-time analytics, it provides recruiters and developers with a comprehensive overview of engineering impact, technical evolution, and open-source contributions.
+GitSnap is a high-performance GitHub profile visualization dashboard designed to transform raw developer activity data into meaningful, data-driven narratives. By leveraging custom SVG charts, real-time analytics, and immersive WebGL backgrounds, it provides recruiters and developers with a comprehensive overview of engineering impact, technical evolution, and open-source contributions.
 
 ## Project Overview
 
@@ -8,6 +8,7 @@ GitSnap aims to bridge the gap between complex GitHub event streams and human-re
 
 ## Key Features
 
+- **Immersive Shader Backgrounds**: Custom WebGL/GLSL shader backgrounds powered by Three.js for a premium, dynamic visual experience.
 - **Responsive Contribution Heatmap**: A custom-built SVG visualization of activity intensity over the past year, optimized for all screen sizes.
 - **Tech Stack Evolution Timeline**: A longitudinal analysis of language usage, tracking how a developer's toolkit has evolved over time.
 - **Open Source Footprint**: A detailed breakdown of contributions to external repositories, distinguishing between personal projects and community impact.
@@ -19,8 +20,9 @@ GitSnap aims to bridge the gap between complex GitHub event streams and human-re
 
 The application is built using a modern, type-safe stack designed for speed and reliability:
 
-- **Framework**: TanStack Start (React 19)
+- **Framework**: Vite + React 19 (SPA)
 - **Styling**: Tailwind CSS 4 with custom animations
+- **Graphics**: Three.js & Custom GLSL Shaders
 - **Routing**: TanStack Router (File-based routing)
 - **Data Fetching**: TanStack Query
 - **Visualization**: Recharts and custom SVG implementations
@@ -32,7 +34,7 @@ The application is built using a modern, type-safe stack designed for speed and 
 ### Prerequisites
 
 - Node.js (Latest LTS recommended)
-- Bun or NPM
+- [Bun](https://bun.sh/) (Recommended) or NPM
 
 ### Installation
 
@@ -45,23 +47,29 @@ The application is built using a modern, type-safe stack designed for speed and 
 2. Install dependencies:
 
    ```bash
+   bun install
+   # or
    npm install
    ```
 
 3. Start the development server:
 
    ```bash
+   bun run dev
+   # or
    npm run dev
    ```
 
 4. Build for production:
    ```bash
+   bun run build
+   # or
    npm run build
    ```
 
 ## Project Structure
 
-- `/src/components`: Reusable UI components and specialized chart modules.
+- `/src/components`: Reusable UI components, specialized chart modules, and shader backgrounds.
 - `/src/routes`: File-based routing system and page-level logic.
 - `/src/lib`: Utility functions and data transformation logic.
 - `/src/hooks`: Custom React hooks for data fetching and state management.
