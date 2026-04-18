@@ -19,7 +19,7 @@ export function SearchBar({ initial = "", onSubmit, loading }: Props) {
     <form onSubmit={handle} className="flex w-full max-w-xl items-center gap-2">
       <div className="relative flex-1">
         <svg
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-blue-400"
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
           width="18"
           height="18"
           viewBox="0 0 24 24"
@@ -38,13 +38,13 @@ export function SearchBar({ initial = "", onSubmit, loading }: Props) {
           autoFocus
           spellCheck={false}
           autoComplete="off"
-          className="w-full rounded-lg border border-blue-500/30 bg-black/20 py-3 pl-10 pr-3 text-sm text-white outline-none transition-all placeholder:text-blue-300/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30"
+          className="w-full rounded-lg border border-white/20 bg-black/20 py-3 pl-10 pr-3 text-sm text-white outline-none transition-all placeholder:text-zinc-500 focus:border-white/40 focus:ring-2 focus:ring-white/20"
         />
       </div>
       <button
         type="submit"
         disabled={loading}
-        className="rounded-lg gradient-button px-8 py-3 text-sm font-semibold transition-all active:opacity-80 disabled:opacity-60"
+        className="rounded-lg gradient-button-blue-grey px-8 py-3 text-sm font-semibold transition-all active:opacity-80 disabled:opacity-60"
       >
         {loading ? "Loading…" : "ANALYZE"}
       </button>

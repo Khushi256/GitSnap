@@ -2,14 +2,19 @@ import { createFileRoute, useParams } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   fetchAll,
+  fetchContributions,
   aggregateLanguages,
   totalStars,
   totalForks,
   topRepo,
   eventBreakdown,
-  buildActivityWeeks,
   currentStreak,
   profileScore,
+  generateSummary,
+  computeWorkSchedule,
+  computeOSFootprint,
+  aggregateTopics,
+  computeLanguageTimeline,
   type GitHubUser,
   type GitHubRepo,
   type GitHubEvent,
@@ -22,9 +27,11 @@ import { ContribHeatmap } from "@/components/charts/ContribHeatmap";
 import { ActivityBars } from "@/components/charts/ActivityBars";
 import { EventBreakdown } from "@/components/charts/EventBreakdown";
 import { RepoScatter } from "@/components/charts/RepoScatter";
-import { RepoTimeline } from "@/components/charts/RepoTimeline";
+import { LanguageTimeline } from "@/components/charts/LanguageTimeline";
+import { WorkSchedule } from "@/components/charts/WorkSchedule";
+import { OSFootprint } from "@/components/charts/OSFootprint";
 import { TopRepos } from "@/components/TopRepos";
-import { DashboardSkeleton } from "@/components/Skeleton";
+import { DashboardSkeleton, SkeletonBlock } from "@/components/Skeleton";
 import AnoAI from "@/components/ui/animated-shader-background";
 import { SearchBar } from "@/components/SearchBar";
 
@@ -53,6 +60,8 @@ function ProfilePage() {
   const [data, setData] = useState<Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [contributions, setContributions] = useState<{ date: string; count: number; level: 0 | 1 | 2 | 3 | 4 }[] | null>(null);
+  const [contribLoading, setContribLoading] = useState(true);
 
   useEffect(() => {
     if (!username) return;
@@ -61,9 +70,19 @@ function ProfilePage() {
       setLoading(true);
       setError(null);
       setData(null);
+      setContribLoading(true);
+      setContributions(null);
+      
+      const contribPromise = fetchContributions(username).catch(() => null);
+
       try {
         const result = await fetchAll(username);
         setData(result);
+        
+        contribPromise.then(contribs => {
+          setContributions(contribs);
+          setContribLoading(false);
+        });
       } catch (e) {
         const msg =
           (e as Error).message === "USER_NOT_FOUND"
@@ -82,36 +101,45 @@ function ProfilePage() {
 
   const derived = useMemo(() => {
     if (!data) return null;
-    const days = buildActivityWeeks(data.events);
+    const langs = aggregateLanguages(data.repos);
     return {
-      langs: aggregateLanguages(data.repos),
+      langs,
       stars: totalStars(data.repos),
       forks: totalForks(data.repos),
       top: topRepo(data.repos),
       events: eventBreakdown(data.events),
-      days,
-      streak: currentStreak(days),
       badge: profileScore(data.user, data.repos),
       shareUrl: `${window.location.origin}/${data.user.login}`,
+      summary: generateSummary(data.user, data.repos, langs, contributions),
+      workSchedule: computeWorkSchedule(data.events),
+      osFootprint: computeOSFootprint(data.events, data.user.login),
+      topics: aggregateTopics(data.repos),
+      timeline: computeLanguageTimeline(data.repos),
     };
-  }, [data]);
+  }, [data, contributions]);
 
   return (
     <>
       <div className="fixed inset-0 z-0 overflow-hidden">
         <AnoAI />
       </div>
-      <div className="relative z-1 min-h-screen overflow-auto flex flex-col justify-start pt-6">
+      <div className="relative z-1 min-h-screen overflow-auto flex flex-col justify-start pt-20 sm:pt-24">
+        {/* Logo in Top-Left Corner (Matches Landing Page) */}
+        <a href="/" className="fixed top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2 hover:opacity-80 transition-opacity animate-fade-in">
+          <img src="/gitsnap-logo.png" alt="GitSnap" className="h-7 w-7 sm:h-8 sm:w-8" />
+          <span className="text-sm sm:text-base font-bold gradient-text">GitSnap</span>
+        </a>
+
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-          {/* Header with Logo and Back Button */}
-          <div className="mb-8 flex items-center justify-between">
+          {/* Header Back Button */}
+          <div className="mb-6 flex items-center justify-end">
             <a
               href="/"
               className="inline-flex items-center gap-2 text-sm gradient-text hover:opacity-80 transition-opacity"
             >
               <svg
-                width="18"
-                height="18"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -119,11 +147,7 @@ function ProfilePage() {
               >
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
-              Back to search
-            </a>
-            <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <img src="/gitsnap-logo.png" alt="GitSnap" className="h-9 w-9 sm:h-10 sm:w-10" />
-              <span className="text-lg font-bold gradient-text hidden sm:block">GitSnap</span>
+              New search
             </a>
           </div>
 
@@ -140,7 +164,7 @@ function ProfilePage() {
           {/* Data loaded */}
           {!loading && data && derived && (
             <div className="space-y-6 stagger">
-              <ProfileHeader user={data.user} badge={derived.badge} shareUrl={derived.shareUrl} />
+              <ProfileHeader user={data.user} badge={derived.badge} shareUrl={derived.shareUrl} summary={derived.summary} />
 
               <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
                 <StatCard
@@ -152,28 +176,40 @@ function ProfilePage() {
                   label="Stars"
                   value={derived.stars}
                   icon={<Icon name="star" />}
-                  accent="text-blue-400"
+                  accent="text-indigo-400"
                 />
                 <StatCard label="Forks" value={derived.forks} icon={<Icon name="fork" />} />
                 <StatCard
                   label="Followers"
                   value={data.user.followers}
                   icon={<Icon name="users" />}
-                  accent="text-blue-400"
+                  accent="text-indigo-400"
                 />
-                <StatCard
-                  label="Day Streak"
-                  value={derived.streak}
-                  icon={<Icon name="flame" />}
-                  accent="text-orange-400"
-                />
+                {contribLoading ? (
+                  <SkeletonBlock className="h-[92px] w-full" />
+                ) : (
+                  <StatCard
+                    label="Day Streak"
+                    value={contributions ? currentStreak(contributions) : 0}
+                    icon={<Icon name="flame" />}
+                    accent="text-orange-400"
+                  />
+                )}
               </div>
 
               <Section
                 title="Contribution heatmap"
                 subtitle="Last 52 weeks of public push activity"
               >
-                <ContribHeatmap days={derived.days} />
+                {contribLoading ? (
+                  <SkeletonBlock className="h-48 w-full" />
+                ) : contributions ? (
+                  <ContribHeatmap days={contributions} />
+                ) : (
+                  <div className="flex h-48 w-full items-center justify-center rounded-xl border border-dashed border-border bg-card/50 text-sm text-muted-foreground">
+                    Couldn't load contributions
+                  </div>
+                )}
               </Section>
 
               <div className="grid gap-6 lg:grid-cols-2">
@@ -181,7 +217,15 @@ function ProfilePage() {
                   title="Weekly commit activity"
                   subtitle="Aggregated from public push events"
                 >
-                  <ActivityBars days={derived.days} />
+                  {contribLoading ? (
+                    <SkeletonBlock className="h-48 w-full" />
+                  ) : contributions ? (
+                    <ActivityBars days={contributions} />
+                  ) : (
+                    <div className="flex h-48 w-full items-center justify-center rounded-xl border border-dashed border-border bg-card/50 text-sm text-muted-foreground">
+                      Couldn't load activity
+                    </div>
+                  )}
                 </Section>
                 <Section title="Top languages" subtitle="From non-fork public repos">
                   <LanguageDonut data={derived.langs} />
@@ -196,19 +240,29 @@ function ProfilePage() {
                   <TopRepos repos={data.repos} />
                 </Section>
               </div>
+              
+              <div className="grid gap-6 lg:grid-cols-2">
+                <Section
+                  title="Work Schedule"
+                  subtitle="When do they code? (Weekday vs Weekend)"
+                >
+                  <WorkSchedule data={derived.workSchedule} />
+                </Section>
+                <Section
+                  title="Open Source Footprint"
+                  subtitle="Commits to personal vs external repositories"
+                >
+                  <OSFootprint data={derived.osFootprint} />
+                </Section>
+              </div>
+
+
 
               <Section
-                title="Repo size vs stars"
-                subtitle="Each dot = a repo. Log scale on both axes."
+                title="Tech Stack Evolution"
+                subtitle="Repositories created per year, grouped by primary language"
               >
-                <RepoScatter repos={data.repos} />
-              </Section>
-
-              <Section
-                title="Repo creation timeline"
-                subtitle="When repositories were first created"
-              >
-                <RepoTimeline repos={data.repos} />
+                <LanguageTimeline data={derived.timeline} />
               </Section>
 
               <footer className="pt-4 text-center text-xs text-muted-foreground">

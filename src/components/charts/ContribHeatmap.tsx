@@ -18,13 +18,13 @@ export function ContribHeatmap({ days }: { days: Day[] }) {
   const [hover, setHover] = useState<{ x: number; y: number; day: Day } | null>(null);
   const cell = 16;
   const gap = 4;
-  const weeks = 52;
+  const weeks = Math.ceil(days.length / 7);
   const width = weeks * (cell + gap) + gap;
   const height = 7 * (cell + gap) + gap;
 
   return (
     <div className="relative">
-      <div className="overflow-x-auto pb-4">
+      <div className="overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <svg width={width} height={height} className="block">
           {days.map((d, i) => {
             const week = Math.floor(i / 7);
@@ -63,16 +63,16 @@ export function ContribHeatmap({ days }: { days: Day[] }) {
       </div>
       {hover && (
         <div
-          className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-md border border-blue-500/30 bg-black/40 backdrop-blur-sm px-3 py-2 text-xs font-medium shadow-lg"
+          className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-md border border-white/10 bg-black/60 backdrop-blur-md px-3 py-2 text-xs font-medium shadow-xl"
           style={{ left: hover.x, top: hover.y - 8 }}
         >
-          <div className="font-display font-semibold text-blue-200">
+          <div className="font-display font-semibold text-white">
             {hover.day.count} {hover.day.count === 1 ? "commit" : "commits"}
           </div>
-          <div className="text-blue-300/70">{hover.day.date}</div>
+          <div className="text-zinc-400">{hover.day.date}</div>
         </div>
       )}
-      <div className="mt-4 flex items-center justify-end gap-2 text-xs text-blue-300/70">
+      <div className="mt-4 flex items-center justify-end gap-2 text-xs text-zinc-400">
         <span className="font-medium">Less</span>
         {COLORS.map((c, i) => (
           <span

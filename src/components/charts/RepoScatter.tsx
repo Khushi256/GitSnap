@@ -48,8 +48,8 @@ export function RepoScatter({ repos }: { repos: GitHubRepo[] }) {
             cx={xScale(r.size)}
             cy={yScale(r.stargazers_count)}
             r={hover?.id === r.id ? 7 : 4}
-            fill="oklch(0.85 0 0)"
-            opacity={0.75}
+            fill="oklch(0.7 0.18 240)"
+            opacity={0.8}
             onMouseEnter={() => setHover(r)}
             onMouseLeave={() => setHover(null)}
             style={{ cursor: "pointer", transition: "r 0.15s" }}

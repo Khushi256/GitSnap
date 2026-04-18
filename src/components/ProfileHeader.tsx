@@ -5,9 +5,10 @@ interface Props {
   user: GitHubUser;
   badge: { label: string; color: string };
   shareUrl: string;
+  summary?: string;
 }
 
-export function ProfileHeader({ user, badge, shareUrl }: Props) {
+export function ProfileHeader({ user, badge, shareUrl, summary }: Props) {
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
@@ -17,19 +18,19 @@ export function ProfileHeader({ user, badge, shareUrl }: Props) {
   };
 
   return (
-    <div className="rounded-2xl border border-blue-500/20 bg-black backdrop-blur-sm p-6 sm:p-8 hover:border-blue-500/40 transition-colors">
+    <div className="rounded-2xl border border-indigo-500/30 bg-black/40 backdrop-blur-sm p-6 sm:p-8 hover:border-indigo-500/50 transition-colors">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
         <img
           src={user.avatar_url}
           alt={user.login}
-          className="h-28 w-28 rounded-full border border-blue-500/30"
+          className="h-28 w-28 rounded-full border border-indigo-500/40"
         />
         <div className="flex-1 space-y-3">
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-display text-3xl font-semibold gradient-text">
               {user.name ?? user.login}
             </h1>
-            <span className="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-300">
+            <span className="inline-flex items-center rounded-full border border-indigo-500/40 bg-indigo-500/20 px-3 py-1 text-xs font-medium text-indigo-200">
               ★ {badge.label}
             </span>
           </div>
@@ -37,12 +38,18 @@ export function ProfileHeader({ user, badge, shareUrl }: Props) {
             href={user.html_url}
             target="_blank"
             rel="noreferrer"
-            className="font-display text-sm text-blue-400 hover:text-blue-300 transition-colors"
+            className="font-display text-sm text-indigo-300 hover:text-indigo-200 transition-colors"
           >
             @{user.login}
           </a>
-          {user.bio && <p className="text-sm text-white/70">{user.bio}</p>}
-          <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-blue-300/70">
+          {user.bio && <p className="text-sm text-white/80">{user.bio}</p>}
+          {summary && (
+            <div className="my-2 rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-sm text-indigo-100 shadow-inner">
+              <strong className="block text-[10px] uppercase tracking-wider text-indigo-300 mb-1 opacity-80">Quick Summary</strong>
+              {summary}
+            </div>
+          )}
+          <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-zinc-400 mt-2">
             {user.location && <span>📍 {user.location}</span>}
             {user.company && <span>🏢 {user.company}</span>}
             {user.blog && (

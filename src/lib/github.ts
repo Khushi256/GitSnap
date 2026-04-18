@@ -67,6 +67,42 @@ export const fetchRepos = (username: string) =>
 export const fetchEvents = (username: string) =>
   ghFetch<GitHubEvent[]>(`/users/${encodeURIComponent(username)}/events/public?per_page=100`);
 
+export async function fetchContributions(username: string, retries = 2) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const res = await fetch(`https://github-contributions-api.deno.dev/${encodeURIComponent(username)}.json`);
+      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const data = await res.json();
+      
+      // Adapt Deno API response to our days format
+      const days: { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 }[] = [];
+      const levels: Record<string, 0 | 1 | 2 | 3 | 4> = {
+        NONE: 0,
+        FIRST_QUARTILE: 1,
+        SECOND_QUARTILE: 2,
+        THIRD_QUARTILE: 3,
+        FOURTH_QUARTILE: 4,
+      };
+      
+      for (const week of data.contributions) {
+        for (const day of week) {
+          days.push({
+            date: day.date,
+            count: day.contributionCount,
+            level: levels[day.contributionLevel as keyof typeof levels] ?? 0,
+          });
+        }
+      }
+      return days.slice(-364);
+    } catch (err) {
+      if (i === retries) throw err;
+      // Exponential backoff
+      await new Promise(r => setTimeout(r, 500 * Math.pow(2, i)));
+    }
+  }
+  return null;
+}
+
 export async function fetchAll(username: string) {
   const [user, repos, events] = await Promise.all([
     fetchUser(username),
@@ -168,4 +204,138 @@ export function profileScore(user: GitHubUser, repos: GitHubRepo[]) {
   if (score > 400) return { label: "Rising Contributor", color: "from-blue-400 to-cyan-400" };
   if (score > 80) return { label: "Active Builder", color: "from-emerald-400 to-teal-400" };
   return { label: "Newcomer", color: "from-slate-400 to-slate-500" };
+}
+
+export function isRealProject(repo: GitHubRepo) {
+  if (repo.fork) return false;
+  const str = `${repo.name} ${repo.description || ""}`.toLowerCase();
+  return !/(tutorial|clone|bootcamp|assignment|practice|todo|course)/i.test(str);
+}
+
+export function generateSummary(
+  user: GitHubUser,
+  repos: GitHubRepo[],
+  langs: { name: string; count: number; pct: number }[],
+  days: { date: string; count: number }[] | null
+) {
+  const topLang = langs.length > 0 ? langs[0].name : "polyglot";
+  const realProjects = repos.filter(isRealProject);
+  const activeCount = realProjects.filter((r) => r.stargazers_count > 0 || r.forks_count > 0).length;
+  
+  let recentActivity = "with unknown recent activity";
+  if (days) {
+    const recentCommits = days.slice(-30).reduce((s, d) => s + d.count, 0);
+    if (recentCommits > 20) recentActivity = "highly active recently";
+    else if (recentCommits > 0) recentActivity = "active recently";
+    else recentActivity = "inactive recently";
+  }
+
+  const traction = activeCount > 0 
+    ? `with ${activeCount} original project${activeCount === 1 ? "" : "s"} showing some traction`
+    : `focusing on personal projects`;
+
+  return `Primarily a ${topLang} developer, ${recentActivity}, ${traction}.`;
+}
+
+export function computeWorkSchedule(events: GitHubEvent[]) {
+  let weekday = 0;
+  let weekend = 0;
+  for (const e of events) {
+    if (e.type !== "PushEvent") continue;
+    const day = new Date(e.created_at).getDay(); // 0 = Sunday, 6 = Saturday
+    if (day === 0 || day === 6) weekend++;
+    else weekday++;
+  }
+  return { weekday, weekend };
+}
+
+export function computeOSFootprint(events: GitHubEvent[], username: string) {
+  let personal = 0;
+  let external = 0;
+  for (const e of events) {
+    if (e.type !== "PushEvent" && e.type !== "PullRequestEvent") continue;
+    const owner = e.repo.name.split("/")[0];
+    if (owner.toLowerCase() === username.toLowerCase()) personal++;
+    else external++;
+  }
+  return { personal, external };
+}
+
+export function aggregateTopics(repos: GitHubRepo[]) {
+  const map = new Map<string, number>();
+  
+  // High-value keywords to extract from descriptions if explicit topics aren't used
+  const keywords = [
+    "react", "vue", "angular", "svelte", "nextjs", "nuxtjs", 
+    "node", "express", "django", "flask", "fastapi", "spring", 
+    "docker", "kubernetes", "aws", "gcp", "azure", "firebase", 
+    "supabase", "mongodb", "postgresql", "mysql", "redis", 
+    "graphql", "trpc", "tailwind", "prisma", "tensorflow", "pytorch",
+    "rust", "golang", "swift", "kotlin", "typescript"
+  ];
+
+  for (const r of repos) {
+    if (r.fork || !isRealProject(r)) continue;
+    
+    if (r.topics) {
+      for (const t of r.topics) {
+        map.set(t, (map.get(t) ?? 0) + 1);
+      }
+    }
+
+    if (r.description) {
+      const desc = r.description.toLowerCase();
+      for (const kw of keywords) {
+        const regex = new RegExp(`\\b${kw.replace('js', '(\\.js|js)?')}\\b`);
+        if (regex.test(desc)) {
+          map.set(kw, (map.get(kw) ?? 0) + 1);
+        }
+      }
+    }
+  }
+  
+  return [...map.entries()]
+    .map(([topic, count]) => ({ topic, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 15);
+}
+
+export function computeLanguageTimeline(repos: GitHubRepo[]) {
+  const years = new Map<number, { [lang: string]: number }>();
+  const allLangs = new Map<string, number>();
+
+  for (const r of repos) {
+    if (r.fork || !isRealProject(r)) continue;
+    const year = new Date(r.created_at).getFullYear();
+    const lang = r.language || "Unknown";
+    
+    if (!years.has(year)) years.set(year, {});
+    const yearData = years.get(year)!;
+    yearData[lang] = (yearData[lang] ?? 0) + 1;
+    allLangs.set(lang, (allLangs.get(lang) ?? 0) + 1);
+  }
+  
+  const topLangs = [...allLangs.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(x => x[0]);
+    
+  return {
+    topLangs,
+    timeline: [...years.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([year, langs]) => {
+        const consolidated: { [lang: string]: number } = {};
+        topLangs.forEach(l => consolidated[l] = 0);
+        consolidated["Other"] = 0;
+        
+        let total = 0;
+        for (const [l, count] of Object.entries(langs)) {
+          if (topLangs.includes(l)) consolidated[l] += count;
+          else consolidated["Other"] += count;
+          total += count;
+        }
+        return { year, languages: consolidated, total };
+      })
+  };
 }

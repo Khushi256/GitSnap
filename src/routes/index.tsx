@@ -47,13 +47,13 @@ function Index() {
         <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Hero */}
           <header className="text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-xs tracking-wide text-blue-300 backdrop-blur animate-fade-in-scale">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs tracking-wide text-zinc-300 backdrop-blur animate-fade-in-scale">
+              <span className="h-1.5 w-1.5 rounded-full bg-white" />
               Open Source Artifacts
             </div>
             <h1 className="mt-8 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight drop-shadow-lg uppercase leading-tight lg:leading-none animate-fade-up animate-delay-100">
               Your Code As <br className="hidden sm:block" />{" "}
-              <span className="gradient-text">A Digital Legacy.</span>
+              A Digital <span className="gradient-blue-grey">Legacy.</span>
             </h1>
             <p className="mx-auto mt-8 max-w-2xl text-sm sm:text-base text-white/70 leading-relaxed tracking-normal animate-fade-up animate-delay-200">
               Transform raw Git data into a curated gallery. Visualize

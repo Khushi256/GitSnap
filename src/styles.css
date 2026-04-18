@@ -69,12 +69,12 @@
   --input: oklch(0.2 0 0);
   --ring: oklch(0.5 0 0);
 
-  /* Contribution heatmap — grey for empty, blue tones for contributions */
-  --contrib-0: oklch(0.28 0 0);
-  --contrib-1: oklch(0.4 0.1 240);
-  --contrib-2: oklch(0.5 0.15 240);
-  --contrib-3: oklch(0.6 0.18 240);
-  --contrib-4: oklch(0.7 0.2 240);
+  /* Contribution heatmap — grey for empty, vibrant bright blues for contributions */
+  --contrib-0: oklch(0.2 0.02 240);
+  --contrib-1: oklch(0.5 0.15 240);
+  --contrib-2: oklch(0.6 0.18 240);
+  --contrib-3: oklch(0.75 0.18 240);
+  --contrib-4: oklch(0.9 0.15 240);
 
   --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 4px 24px -8px oklch(0 0 0 / 0.6);
 
@@ -105,11 +105,19 @@
   }
 
   .gradient-text {
-    @apply bg-linear-to-r from-blue-400 via-blue-300 to-slate-400 bg-clip-text text-transparent;
+    @apply bg-linear-to-r from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent;
+  }
+
+  .gradient-blue-grey {
+    @apply bg-linear-to-r from-blue-400 to-zinc-400 bg-clip-text text-transparent font-semibold;
   }
 
   .gradient-button {
-    @apply bg-linear-to-r from-blue-500 to-slate-500 text-white hover:from-blue-400 hover:to-slate-400;
+    @apply bg-linear-to-r from-zinc-200 to-zinc-500 text-black hover:from-white hover:to-zinc-400;
+  }
+
+  .gradient-button-blue-grey {
+    @apply bg-linear-to-r from-blue-600 to-zinc-500 text-white hover:from-blue-500 hover:to-zinc-400;
   }
 
   .font-display {

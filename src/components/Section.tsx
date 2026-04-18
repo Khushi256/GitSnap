@@ -14,7 +14,7 @@ export function Section({ title, subtitle, children, className = "" }: Props) {
     >
       <header className="mb-4">
         <h2 className="font-display text-base font-semibold gradient-text">{title}</h2>
-        {subtitle && <p className="mt-0.5 text-xs text-blue-300/60">{subtitle}</p>}
+        {subtitle && <p className="mt-0.5 text-xs text-zinc-400">{subtitle}</p>}
       </header>
       {children}
     </section>
